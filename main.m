@@ -89,7 +89,7 @@ function dibujarPantalla(instante)
 
     for i = 1:columns(depredadores)
         depredadorActual = depredadores(i);
-
+        deepredadorActual.posicionX=int64(rand()*10)
         if depredadorActual.posicionX < 1 || depredadorActual.posicionX > 100 || depredadorActual.posicionY < 1 || depredadorActual.posicionY > 100
 
             if depredadorActual.posicionX < 1
@@ -109,7 +109,7 @@ function dibujarPantalla(instante)
             endif
 
         endif
-
+        depredadorActual.direccionMovimiento
         if depredadorActual.direccionMovimiento == 1
             depredadorActual.posicionY +=1;
         endif
