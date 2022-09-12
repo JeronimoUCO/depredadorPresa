@@ -8,8 +8,7 @@ global presas;
 depredadores = struct();
 presas = struct();
 
-mapa = zeros(50, 5
-0);
+mapa = zeros(50, 50);
 poblacionDepredadores = 1;
 poblacionPresas = 1;
 tasaReproduccionPresas = 1;
@@ -44,17 +43,17 @@ function dibujarPantalla(instante)
     global depredadores;
     global poblacionDepredadores;
 
-    for i = 1:columns(presas)-100
+    for i = 1:columns(presas)-100-1
         presaActual = presas(i);
 
 
-        if presaActual.posicionX <= 1 || presaActual.posicionX >= 100 || presaActual.posicionY <= 1 || presaActual.posicionY >= 100
+        if presaActual.posicionX <= 1 || presaActual.posicionX >= 50 || presaActual.posicionY <= 1 || presaActual.posicionY >= 50
 
             if presaActual.posicionX <= 1
                 presaActual.posicionX += 2;
             endif
 
-            if presaActual.posicionX >= 100
+            if presaActual.posicionX >= 50
                 presaActual.posicionX -= 2;
             endif
 
@@ -62,7 +61,7 @@ function dibujarPantalla(instante)
                 presaActual.posicionY += 2;
             endif
 
-            if presaActual.posicionY >= 100
+            if presaActual.posicionY >= 50
                 presaActual.posicionY -= 2;
             endif
 
@@ -84,27 +83,25 @@ function dibujarPantalla(instante)
             presaActual.posicionX -=1;
         endif
 
-        presaActual.direccionMovimiento = int64(rand() * 4 + 1);
-        mapa(presaActual.posicionY, presaActual.posicionX) = 255;
-
-        for j=1:columns(depredadores)
-        if(presaActual.posicionX==depredadores(j).posicionX && presaActual.posicionY==depredadores(j).posicionY)
-        presas(:,i)=[];        
-        endif
+        for j = 1:columns(depredadores)
+          if depredadores(j).posicionX == presaActual.posicionX && depredadores(j).posicionY == presaActual.posicionY
+             presas(:, i) = [];
+          endif
         endfor
-        
+
+        presaActual.direccionMovimiento = int64(rand() * 4 + 1);
         presas(i)=presaActual;
     endfor
 
     for i = 1:columns(depredadores)
         depredadorActual = depredadores(i);
-        if depredadorActual.posicionX <= 1 || depredadorActual.posicionX >= 100 || depredadorActual.posicionY <= 1 || depredadorActual.posicionY >= 100
+        if depredadorActual.posicionX <= 1 || depredadorActual.posicionX >= 50 || depredadorActual.posicionY <= 1 || depredadorActual.posicionY >= 100
 
             if depredadorActual.posicionX <= 1
                 depredadorActual.posicionX +=2;
             endif
 
-            if depredadorActual.posicionX >= 100
+            if depredadorActual.posicionX >= 50
                 depredadorActual.posicionX -= 2;
             endif
 
@@ -112,7 +109,7 @@ function dibujarPantalla(instante)
                 depredadorActual.posicionY += 2;
             endif
 
-            if depredadorActual.posicionY >= 100
+            if depredadorActual.posicionY >= 50
                 depredadorActual.posicionY -= 2;
             endif
 
