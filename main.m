@@ -82,6 +82,12 @@ function dibujarPantalla(instante)
             presaActual.posicionX -=1;
         endif
 
+        for j = 1:columns(depredadores)
+          if depredadores(j).posicionX == presaActual.posicionX && depredadores(j).posicionY == presaActual.posicionY
+             mapa(presas(j).posicionY, presas(j).posicionX) = 0;
+          endif
+        endfor
+
         presaActual.direccionMovimiento = int64(rand() * 4 + 1);
         presas(i)=presaActual;
         mapa(presaActual.posicionY, presaActual.posicionX) = 255;
@@ -108,27 +114,29 @@ function dibujarPantalla(instante)
             endif
 
         endif
-        depredadorActual.direccionMovimiento
+        #depredadorActual.direccionMovimiento
         if depredadorActual.direccionMovimiento == 1
-            depredadorActual.posicionY +=4;
+            depredadorActual.posicionY +=1;
         endif
 
         if depredadorActual.direccionMovimiento == 2
-            depredadorActual.posicionX +=4;
+            depredadorActual.posicionX +=1;
         endif
 
         if depredadorActual.direccionMovimiento == 3
-            depredadorActual.posicionY -=4;
+            depredadorActual.posicionY -=1;
         endif
 
         if depredadorActual.direccionMovimiento == 4
-            depredadorActual.posicionX -=4;
+            depredadorActual.posicionX -=1;
         endif
 
         depredadorActual.direccionMovimiento = int64(rand() * 4 + 1);
         depredadores(i)=depredadorActual;
         mapa(depredadorActual.posicionY, depredadorActual.posicionX) = 50;
+
     endfor
+
     mapa=uint8(mapa);
     subplot(1,2,2)
     imshow(mapa);
