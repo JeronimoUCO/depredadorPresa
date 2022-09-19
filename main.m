@@ -1,21 +1,12 @@
 #Definicion de variables
-global mapa;
-global poblacionDepredadores;
-global poblacionPresas;
-global tasaReproduccionPresas;
-global tasaReproduccionDepredadores;
-global presas;
-global comidas;
-
-depredadores = struct();
-presas = struct();
-
-mapa = zeros(50, 50);
-poblacionDepredadores = 1;
-poblacionPresas = 1;
-tasaReproduccionPresas = 1;
-tasaReproduccionDepredadores = 1;
-comidas=1;
+global mapa = zeros(50, 50);;
+global poblacionDepredadores = 1;
+global poblacionPresas = 1;
+global tasaReproduccionPresas = 1;
+global tasaReproduccionDepredadores = 1;
+global depredadores = struct();
+global presas=struct();
+global comidas=1;
 
 #Creacion de depredadores
 function crearDepredador()
@@ -49,11 +40,11 @@ function dibujarPantalla(instante)
     global depredadores;
     global poblacionDepredadores;
     global comidas;
+    global mapa;
 
     #Muestra las presas que no se han comido
-    for ii = 1:columns(presas)
+    for ii = 1:columns(presas)-comidas
         presaActual = presas(ii);
-        ii
         #Si se toca alguno de los "bordes" del mapa, se lleva de nuevo al interior de este
         if presaActual.posicionX <= 2 || presaActual.posicionX >= 48 || presaActual.posicionY <= 2 || presaActual.posicionY >= 48
 
