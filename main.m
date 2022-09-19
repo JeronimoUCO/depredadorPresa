@@ -7,13 +7,14 @@ global tasaReproduccionDepredadores = 1;
 global depredadores = struct();
 global presas=struct();
 global comidas=1;
+global muertos = 1;
 
 #Creacion de depredadores
 function crearDepredador()
     global poblacionDepredadores;
     global depredadores;
 
-    depredadores(poblacionDepredadores).tiempoVidaSinComida = 10;
+    depredadores(poblacionDepredadores).tiempoVidaSinComida = 50;
     depredadores(poblacionDepredadores).posicionX = int64(rand() * 40 + 2);
     depredadores(poblacionDepredadores).posicionY = int64(rand() * 40 + 2);
     depredadores(poblacionDepredadores).direccionMovimiento = 1;
@@ -40,6 +41,7 @@ function dibujarPantalla(instante)
     global depredadores;
     global poblacionDepredadores;
     global comidas;
+    global muertos;
     global mapa;
 
     #Muestra las presas que no se han comido
@@ -97,7 +99,8 @@ function dibujarPantalla(instante)
         mapa(presaActual.posicionY, presaActual.posicionX) = 255;
     endfor
 
-    for i = 1:columns(depredadores)
+
+    for i = 1:columns(depredadores) - muertos
         depredadorActual = depredadores(i);
         #Se verifica que el depredador no toque los limites del mapa
         if depredadorActual.posicionX <= 2 || depredadorActual.posicionX >= 48 || depredadorActual.posicionY <= 2 || depredadorActual.posicionY >= 48
@@ -135,12 +138,29 @@ function dibujarPantalla(instante)
         if depredadorActual.direccionMovimiento == 4
             depredadorActual.posicionX -=1;
         endif
+
+        #Si el depredor no se ha comido ninguna presa en el tiempo establecido, se elimina
+        if depredadorActual.tiempoVidaSinComida == 0
+          depredadores(:, i) = [];
+          muertos += 1;
+        endif
+
+        #Si el depredador se coma una presa, el tiempoVidaSinComida se restablece
+         for j = 1:columns(presas)
+          if presas(j).posicionX == depredadorActual.posicionX && presas(j).posicionY == depredadorActual.posicionY
+             depredadorActual.tiempoVidaSinComida = 50;
+          endif
+        endfor
+
+        depredadorActual.tiempoVidaSinComida -= 1;
+
         #Se recalcula la direccion de movimiento
         depredadorActual.direccionMovimiento = int64(rand() * 4 + 1);
         #Se actualiza el valor de depredador actual
         depredadores(i)=depredadorActual;
         #Se pinta el depredador en el mapa como un punto gris
         mapa(depredadorActual.posicionY, depredadorActual.posicionX) = 50;
+
 
     endfor
 
@@ -161,11 +181,11 @@ function dibujarPantalla(instante)
     endfor
 endfunction
 
-for i = 1:10
+for i = 1:15
     crearPresa();
 endfor
 
-for i = 1:5
+for i = 1:8
     crearDepredador();
 endfor
 
