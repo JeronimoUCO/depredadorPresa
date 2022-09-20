@@ -8,6 +8,7 @@ global depredadores = struct();
 global presas=struct();
 global comidas=1;
 global muertos = 1;
+global k = 1;
 
 #Creacion de depredadores
 function crearDepredador()
@@ -43,6 +44,7 @@ function dibujarPantalla(instante)
     global comidas;
     global muertos;
     global mapa;
+    global k;
 
     #Muestra las presas que no se han comido
     for ii = 1:columns(presas)-comidas
@@ -100,8 +102,10 @@ function dibujarPantalla(instante)
     endfor
 
 
-    for i = 1:columns(depredadores) - muertos
-        depredadorActual = depredadores(i);
+    #for i = 1:columns(depredadores) - muertos
+    while k < columns(depredadores)
+        depredadorActual = depredadores(k);
+        columns(depredadores)
         #Se verifica que el depredador no toque los limites del mapa
         if depredadorActual.posicionX <= 2 || depredadorActual.posicionX >= 48 || depredadorActual.posicionY <= 2 || depredadorActual.posicionY >= 48
 
@@ -141,7 +145,7 @@ function dibujarPantalla(instante)
 
         #Si el depredor no se ha comido ninguna presa en el tiempo establecido, se elimina
         if depredadorActual.tiempoVidaSinComida == 0
-          depredadores(:, i) = [];
+          depredadores(:, k) = [];
           muertos += 1;
         endif
 
@@ -157,25 +161,27 @@ function dibujarPantalla(instante)
         #Se recalcula la direccion de movimiento
         depredadorActual.direccionMovimiento = int64(rand() * 4 + 1);
         #Se actualiza el valor de depredador actual
-        depredadores(i)=depredadorActual;
+        depredadores(k)=depredadorActual;
         #Se pinta el depredador en el mapa como un punto gris
         mapa(depredadorActual.posicionY, depredadorActual.posicionX) = 50;
+        k += 1
 
 
-    endfor
-
+    endwhile
+    k=1;
     mapa=uint8(mapa);
     subplot(1,2,2)
     imshow(mapa);
     pause(0.001);
+    disp("Hola ")
 
     #Despues de un tiempo, se borran las presas y depredadores del mapa para actualizar sus posiciones
     for i = 1:columns(presas)
         presaActual = presas(i);
         mapa(presaActual.posicionY, presaActual.posicionX) = 0;
     endfor
-
     for i = 1:columns(depredadores)
+
         depredadorActual = depredadores(i);
         mapa(depredadorActual.posicionY, depredadorActual.posicionX) = 0;
     endfor
