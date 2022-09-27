@@ -1,5 +1,5 @@
 #Definicion de variables
-global mapa = zeros(50, 50);;
+global mapa = zeros(50, 50);
 global poblacionDepredadores = 1;
 global poblacionPresas = 1;
 global tasaReproduccionPresas = 1;
@@ -210,17 +210,22 @@ for i = 1:8
     crearDepredador();
 endfor
 
-for i = 1:5000
+for i = 1:50
     global tasaReproduccionPresas;
     global tasaReproduccionDepredadores;
 
     if mod(i, tiempoReproduccionPresas) == 0
-        crearPresa()
+        crearPresa();
     endif
 
     if mod(i, tiempoReproduccionDepredadores) == 0
-        crearDepredador()
+        crearDepredador();
     endif
 
     dibujarPantalla(i);
 endfor
+plot(size(presas))
+hold on
+plot(size(depredadores))
+
+
