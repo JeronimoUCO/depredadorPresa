@@ -2,39 +2,42 @@
 global mapa = zeros(50, 50);
 global poblacionDepredadores = 1;
 global poblacionPresas = 1;
-global tasaReproduccionPresas = 1;
-global tasaReproduccionDepredadores = 1;
 global depredadores = struct();
 global presas = struct();
 global comidas = 1;
 global muertos = 1;
 global k = 1;
-global tiempoReproduccionDepredadores = 20;
+global tiempoReproduccionDepredadores = 10;
 global tiempoReproduccionPresas = 10;
+global nDepredadores=[1];
+global nPresas=[1];
 
 #Creacion de depredadores
 function crearDepredador()
     global poblacionDepredadores;
     global depredadores;
+    global nDepredadores;
 
     depredadores(poblacionDepredadores).tiempoVidaSinComida = 50;
     depredadores(poblacionDepredadores).posicionX = int64(rand() * 40 + 2);
     depredadores(poblacionDepredadores).posicionY = int64(rand() * 40 + 2);
     depredadores(poblacionDepredadores).direccionMovimiento = 1;
     poblacionDepredadores += 1;
-
+    nDepredadores(length(nDepredadores)+1)=nDepredadores(length(nDepredadores))+1;
 endfunction
 
 #Creacion de presas
 function crearPresa()
     global poblacionPresas;
     global presas;
+    global nPresas;
 
     presas(poblacionPresas).posicionX = int64(rand() * 40 + 2);
     presas(poblacionPresas).posicionY = int64(rand() * 40 + 2);
     presas(poblacionPresas).direccionMovimiento = 1;
 
     poblacionPresas += 1;
+    nPresas(length(nPresas)+1)=nPresas(length(nPresas))+1;
 endfunction
 
 #Logica de refresco de pantalla
@@ -47,6 +50,8 @@ function dibujarPantalla(instante)
     global muertos;
     global mapa;
     global k;
+    global nDepredadores;
+    global nPresas;
 
     #Muestra las presas que no se han comido
     for ii = 1:columns(presas) - comidas
@@ -98,6 +103,7 @@ function dibujarPantalla(instante)
             if depredadores(j).posicionX == presaActual.posicionX && depredadores(j).posicionY == presaActual.posicionY
                 presas(:, ii) = [];
                 comidas += 1;
+                nPresas(length(nPresas)+1)=nPresas(length(nPresas))-1
             endif
 
         endfor
@@ -113,7 +119,6 @@ function dibujarPantalla(instante)
     #for i = 1:columns(depredadores) - muertos
     while k < columns(depredadores)
         depredadorActual = depredadores(k);
-        columns(depredadores)
         #Se verifica que el depredador no toque los limites del mapa
         if depredadorActual.posicionX <= 2 || depredadorActual.posicionX >= 48 || depredadorActual.posicionY <= 2 || depredadorActual.posicionY >= 48
 
@@ -159,6 +164,7 @@ function dibujarPantalla(instante)
         if depredadorActual.tiempoVidaSinComida == 0
             depredadores(:, k) = [];
             muertos += 1;
+            nDepredadores(length(nDepredadores)+1)=nDepredadores(length(nDepredadores))-1
         endif
 
         #Si el depredador se coma una presa, el tiempoVidaSinComida se restablece
@@ -186,7 +192,7 @@ function dibujarPantalla(instante)
     mapa = uint8(mapa);
     subplot(1, 2, 2)
     imshow(mapa);
-    pause(0.001);
+    pause(0.002);
 
     #Despues de un tiempo, se borran las presas y depredadores del mapa para actualizar sus posiciones
     for i = 1:columns(presas)
@@ -202,7 +208,7 @@ function dibujarPantalla(instante)
 
 endfunction
 
-for i = 1:15
+for i = 1:8
     crearPresa();
 endfor
 
@@ -210,22 +216,22 @@ for i = 1:8
     crearDepredador();
 endfor
 
-for i = 1:50
+for i = 1:100
     global tasaReproduccionPresas;
     global tasaReproduccionDepredadores;
 
-    if mod(i, tiempoReproduccionPresas) == 0
+    if mod(i, tiempoReproduccionPresas) == 0 && columns(presas)>1
         crearPresa();
     endif
 
-    if mod(i, tiempoReproduccionDepredadores) == 0
+    if mod(i, tiempoReproduccionDepredadores) == 0 && columns(presas)>1
         crearDepredador();
     endif
 
     dibujarPantalla(i);
 endfor
-plot(size(presas))
-hold on
-plot(size(depredadores))
 
+plot(nDepredadores,'o')
+hold on
+plot(nPresas,'*')
 
